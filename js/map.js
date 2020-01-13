@@ -33,3 +33,5 @@ alert("Has clickado en " + e.latlng);
 }
 
 mymap.on('click', onMapClick);
+
+//INSERTAR LEAFLET DRAW (PLUGIN)
