@@ -1,21 +1,10 @@
-var mymap = L.map('mapid', {drawControl: true}).setView([43.3, -1.98], 13);
+var mymap = L.map('map').setView([51.505, -0.09], 13);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamdvbnphbGV6bWEiLCJhIjoiY2s1YzhrNmxuMDVjODNucWYyemxzaGZzOSJ9.8D3kII0_gLRI2XS3jKCDAA', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-maxZoom: 18,
-id: 'mapbox/streets-v11',
-accessToken: 'pk.eyJ1IjoiamdvbnphbGV6bWEiLCJhIjoiY2s1YzhrNmxuMDVjODNucWYyemxzaGZzOSJ9.8D3kII0_gLRI2XS3jKCDAA'
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    accessToken: 'pk.eyJ1IjoiamdvbnphbGV6bWEiLCJhIjoiY2s1YzhrNmxuMDVjODNucWYyemxzaGZzOSJ9.8D3kII0_gLRI2XS3jKCDAA'
 }).addTo(mymap);
-
-//Leaflet Draw
-     // FeatureGroup is to store editable layers
-     var drawnItems = new L.FeatureGroup();
-     mymap.addLayer(drawnItems);
-     var drawControl = new L.Control.Draw({
-         edit: {
-             featureGroup: drawnItems
-         }
-     });
-     mymap.addControl(drawControl);
 
 //Marcadores
 var marker = L.marker([43.3, -1.98]).addTo(mymap);
@@ -44,5 +33,3 @@ alert("Has clickado en " + e.latlng);
 }
 
 mymap.on('click', onMapClick);
-
-//INSERTAR LEAFLET DRAW (PLUGIN)

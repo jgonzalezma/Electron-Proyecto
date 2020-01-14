@@ -6,7 +6,8 @@ MongoClient.connect(url, function(err, db) {
   var dbo = db.db("mapa");
   dbo.collection("mapa").find({}).toArray(function(err, result) {
     if (err) throw err;
-    console.log(result[1].coordinates);
+    console.log(result[2].coordinates);
+    console.log(result[2].desc)
     db.close();
   });
 });

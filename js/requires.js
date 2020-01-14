@@ -1,2 +1,2 @@
 require("leaflet");
-require("leaflet-draw");
+var leafletDraw = require('leaflet-draw');
