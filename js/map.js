@@ -25,10 +25,3 @@ var polygon = L.polygon([
 
 //Popups
 marker.bindPopup("<b>Punto 1</b><br>I am a popup.").openPopup();
-
-//Clicks en el mapa
-/* function onMapClick(e) {
-alert("Has clickado en " + e.latlng);
-}
-
-mymap.on('click', onMapClick); */
