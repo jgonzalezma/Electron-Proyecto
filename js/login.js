@@ -24,5 +24,13 @@ $( "#loginbtn" ).click(function() {
 $("#register").click(function(){
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
+
+    firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error){
+        if(error != null){
+            console.log(error.message);
+            return;
+        }
+        console.log("Usuario creado!");
+    });
 });
 
