@@ -19,6 +19,47 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 //Funcion para preguntar el nombre del marcador
 
+//Recorrer markers
+MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mapa");
+      dbo.collection("marcadores").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        for(i = 0; i < result.length; i++){
+          var m = L.marker(result[i].coordinates).addTo(map);
+          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        }
+        db.close();
+    });
+  });
+  
+  //Recorrer Circle y CircleMarker
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mapa");
+      dbo.collection("circulos").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        for(i = 0; i < result.length; i++){
+          var m = L.circleMarker(result[i].coordinates).addTo(map);
+          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        }
+        db.close();
+    });
+  });
+  //Recorrer Polygons
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("mapa");
+      dbo.collection("poligonos").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        for(i = 0; i < result.length; i++){
+          var m = L.Polygon(result[i].coordinates).addTo(map);
+          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        }
+        db.close();
+    });
+  });
+
 //Funciones para crear markers, circle, circlemarkers y plygons.
 //Markers
 function saveMarker(){
@@ -82,52 +123,50 @@ map.on('draw:created', function (e) {
         var desc = "Punto y";
 
     if (type === 'marker') {
-       saveMarker();
+              // Do whatever else you need to. (save to db, add to map etc)
+              var MongoClient = require('mongodb').MongoClient;
+              var url = "mongodb://localhost:27017/";
+              MongoClient.connect(url, function(err, db) {
+                  if (err) throw err;
+                  var dbo = db.db("mapa");
+                  var myobj = { coordinates: [lat, lng], desc: desc };
+                  dbo.collection("marcadores").insertOne(myobj, function(err, res) {
+                      if (err) throw err;
+                      console.log(e);
+                      db.close();
+                  });
+                  });
+              map.addLayer(layer);
     }
     else if (type === 'circle' || 'circlemarker'){
-        saveCircles();
+        var radius = layer.getRadius();
+        console.log(radius);
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/";
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("mapa");
+            var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
+            dbo.collection("circulos").insertOne(myobj, function(err, res) {
+                if (err) throw err;
+                console.log(e);
+                db.close();
+            });
+            });
+        map.addLayer(layer);
     }else if (type === 'polygon'){
-        savePolygon();
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/";
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("mapa");
+            var myobj = { coordinates: [lat, lng], desc: desc };
+            dbo.collection("poligonos").insertOne(myobj, function(err, res) {
+                if (err) throw err;
+                console.log(e);
+                db.close();
+            });
+            });
+        map.addLayer(layer);
     }
 });
-
-//Recorrer markers
-MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("marcadores").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.marker(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
-  
-  //Recorrer Circle y CircleMarker
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("circulos").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.circleMarker(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
-  //Recorrer Polygons
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("poligonos").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.Polygon(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
