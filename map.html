@@ -21,7 +21,18 @@
   <body>
     <div id="map"></div>
     <script>var leafletDraw = require('leaflet-draw');</script>
-    <script>const { dialog } = require('electron')</script>
     <script src="js/map.js"></script>
+    <button onclick="testDialog()">Prueba dialog</button>
+    <script>
+    function testDialog(){
+      userPrompt('Label text', 'Placeholder text')
+    .then(input => {
+      console.log(input);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+      }
+    </script>
   </body>
 </html>

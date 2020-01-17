@@ -1,3 +1,5 @@
+require('firebase/auth');
+  
   // Your web app's Firebase configuration
   var config = {
     apiKey: "AIzaSyDmqVh-kOMvG9OKzm7DJ8xaopIiqH8gV20",

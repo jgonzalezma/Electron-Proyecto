@@ -1,3 +1,4 @@
+const userPrompt = require('electron-osx-prompt');
 //Conexion de Mongo
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -169,4 +170,6 @@ map.on('draw:created', function (e) {
             });
         map.addLayer(layer);
     }
-});
+}); 
+
+//https://www.npmjs.com/package/electron-osx-prompt
