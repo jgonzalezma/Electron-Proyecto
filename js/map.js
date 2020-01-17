@@ -1,4 +1,3 @@
-const userPrompt = require('electron-osx-prompt');
 //Conexion de Mongo
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
