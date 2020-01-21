@@ -64,8 +64,6 @@ MongoClient.connect(url, function(err, db) {
 //Markers
 function saveMarker(){
        // Do whatever else you need to. (save to db, add to map etc)
-       var MongoClient = require('mongodb').MongoClient;
-       var url = "mongodb://localhost:27017/";
        MongoClient.connect(url, function(err, db) {
            if (err) throw err;
            var dbo = db.db("mapa");
@@ -82,8 +80,6 @@ function saveMarker(){
 //Circles y circlemarkers
 function saveCircles(){
     var radius = layer.getRadius();
-    var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/";
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mapa");
@@ -99,8 +95,6 @@ function saveCircles(){
 
 //Polygon
 function savePolygon(){
-    var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/";
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mapa");
@@ -121,6 +115,7 @@ map.on('draw:created', function (e) {
         var lat = layer.getLatLng().lat;
         var lng = layer.getLatLng().lng;
         var desc = document.getElementById('valueMarcador').value;
+        //location.reload();
 
     if (type === 'marker') {
               // Do whatever else you need to. (save to db, add to map etc)
