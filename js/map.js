@@ -1,3 +1,4 @@
+var desc;
 //Plugin de alertas
 const Swal = require('sweetalert2')
 //JQuery
@@ -118,7 +119,6 @@ map.on('draw:created', function (e) {
         //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
         var lat = layer.getLatLng().lat;
         var lng = layer.getLatLng().lng;
-        var desc = "def";
         Swal.mixin({
             input: 'text',
             confirmButtonText: 'Next &rarr;',
