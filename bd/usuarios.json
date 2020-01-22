@@ -1,1 +1,2 @@
 {"_id":{"$oid":"5e1d98c4c7a3530a78c02525"},"name":"user","password":"user"}
+{"_id":{"$oid":"5e280f4835f0241a68fe94df"},"name":"prueba","password":"$2a$10$ZB2T67/bZqleIuQGabFKQeoopHr7sMSPIjDY5ZpFYKEGpV6P2U/PW"}
