@@ -12,6 +12,7 @@
     "electron": "^7.1.7"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "electron-better-dialog": "^1.0.6",
     "jquery": "^3.4.1",
     "leaflet": "^1.6.0",
