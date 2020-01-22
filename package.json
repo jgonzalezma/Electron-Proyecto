@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "electron-better-dialog": "^1.0.6",
-    "firebase": "^7.7.0",
     "jquery": "^3.4.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
