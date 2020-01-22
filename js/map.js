@@ -1,3 +1,4 @@
+//Variables globales
 var desc;
 //Plugin de alertas
 const Swal = require('sweetalert2')
@@ -137,6 +138,7 @@ map.on('draw:created', function (e) {
                 title: '¡Marcador creado!',
                 confirmButtonText: 'Salir'
               })
+              console.log(desc);
             }
           })
           
