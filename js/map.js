@@ -118,6 +118,7 @@ map.on('draw:created', function (e) {
         //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
         var lat = layer.getLatLng().lat;
         var lng = layer.getLatLng().lng;
+        var desc = "def";
         Swal.mixin({
             input: 'text',
             confirmButtonText: 'Next &rarr;',
@@ -131,13 +132,14 @@ map.on('draw:created', function (e) {
             'Introduce el nombre del grupo'
           ]).then((result) => {
             if (result.value) {
-              const answers = JSON.stringify(result.value)
+              desc = result.value[0];
               Swal.fire({
                 title: '¡Marcador creado!',
                 confirmButtonText: 'Salir'
               })
             }
           })
+          
         //location.reload();
 
     if (type === 'marker') {
@@ -147,7 +149,7 @@ map.on('draw:created', function (e) {
               MongoClient.connect(url, function(err, db) {
                   if (err) throw err;
                   var dbo = db.db("mapa");
-                  var myobj = { coordinates: [lat, lng], desc: "F" };
+                  var myobj = { coordinates: [lat, lng], desc: desc };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
                       console.log(e);
