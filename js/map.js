@@ -1,3 +1,7 @@
+//Plugin de alertas
+const Swal = require('sweetalert2')
+//JQuery
+window.jQuery = window.$ = require('jquery');
 //Conexion de Mongo
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -60,7 +64,7 @@ MongoClient.connect(url, function(err, db) {
     });
   });
 
-//Funciones para crear markers, circle, circlemarkers y plygons.
+//Funciones para crear markers, circle, circlemarkers y polygons.
 //Markers
 function saveMarker(){
        // Do whatever else you need to. (save to db, add to map etc)
@@ -114,7 +118,26 @@ map.on('draw:created', function (e) {
         //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
         var lat = layer.getLatLng().lat;
         var lng = layer.getLatLng().lng;
-        var desc = document.getElementById('valueMarcador').value;
+        Swal.mixin({
+            input: 'text',
+            confirmButtonText: 'Next &rarr;',
+            showCancelButton: true,
+            progressSteps: ['1', '2']
+          }).queue([
+            {
+              title: 'Crear marcador',
+              text: 'Introduce la descripción del marcador'
+            },
+            'Introduce el nombre del grupo'
+          ]).then((result) => {
+            if (result.value) {
+              const answers = JSON.stringify(result.value)
+              Swal.fire({
+                title: '¡Marcador creado!',
+                confirmButtonText: 'Salir'
+              })
+            }
+          })
         //location.reload();
 
     if (type === 'marker') {
@@ -124,7 +147,7 @@ map.on('draw:created', function (e) {
               MongoClient.connect(url, function(err, db) {
                   if (err) throw err;
                   var dbo = db.db("mapa");
-                  var myobj = { coordinates: [lat, lng], desc: desc };
+                  var myobj = { coordinates: [lat, lng], desc: "F" };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
                       console.log(e);
@@ -141,7 +164,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
+            var myobj = { coordinates: [lat, lng], radius: radius, desc: "F" };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -155,7 +178,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: [lat, lng], desc: desc };
+            var myobj = { coordinates: [lat, lng], desc: "F" };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
