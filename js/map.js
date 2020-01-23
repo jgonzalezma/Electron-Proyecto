@@ -8,22 +8,28 @@ window.jQuery = window.$ = require('jquery');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
-var map = L.map('map', {drawControl:true}).setView([43.29, -1.98], 11);
+var map = L.map('map').setView([43.29, -1.98], 11);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamdvbnphbGV6bWEiLCJhIjoiY2s1YzhrNmxuMDVjODNucWYyemxzaGZzOSJ9.8D3kII0_gLRI2XS3jKCDAA', {
     maxZoom: 18,
     id: 'mapbox/streets-v11',
     accessToken: 'pk.eyJ1IjoiamdvbnphbGV6bWEiLCJhIjoiY2s1YzhrNmxuMDVjODNucWYyemxzaGZzOSJ9.8D3kII0_gLRI2XS3jKCDAA'
 }).addTo(map);
-
+     // FeatureGroup is to store editable layers
+     //Toolbar de los marcadores del mapa
+     var drawnItems = new L.FeatureGroup();
+     map.addLayer(drawnItems);
+     var drawControl = new L.Control.Draw({
+         edit: {
+             featureGroup: drawnItems
+         }
+     });
+     map.addControl(drawControl);
 //Ver escala
 L.control.scale().addTo(map);
 
 function onMapClick(e) {
     console.log(e.latlng);
 }
-
-map.on('click', onMapClick);
-//Funcion para preguntar el nombre del marcador
 
 //Recorrer markers
 MongoClient.connect(url, function(err, db) {
@@ -139,10 +145,9 @@ map.on('draw:created', function (e) {
                 confirmButtonText: 'Salir'
               })
               console.log(desc);
+              console.log(e);
             }
           })
-          
-        //location.reload();
 
     if (type === 'marker') {
               // Do whatever else you need to. (save to db, add to map etc)
@@ -193,4 +198,27 @@ map.on('draw:created', function (e) {
     }
 }); 
 
+//Alerta al clickar un marcador para borrarlo
+map.on('click', function () {
+  Swal.fire({
+    title: 'Vas a borrar el marcador, ¿Estás seguro?',
+    text: "Esta acción no se puede revertir",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Borrar'
+  }).then((result) => {
+    if (result.value) {
+      Swal.fire(
+        'Borrado',
+        'Se ha borrado el marcador',
+        'success'
+      )
+    }
+  })
+});
+
 //https://www.npmjs.com/package/electron-osx-prompt
+
+//Ejemplo borrar markers desde el toolbar https://leaflet.github.io/Leaflet.draw/docs/examples/popup.html
