@@ -1,5 +1,5 @@
 //Variables globales
-var desc;
+var desc = "default";
 //Plugin de alertas
 const Swal = require('sweetalert2')
 //JQuery
@@ -30,50 +30,9 @@ L.control.scale().addTo(map);
 function onMapClick(e) {
     console.log(e.latlng);
 }
-
-//Recorrer markers
-MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("marcadores").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.marker(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
-  
-  //Recorrer Circle y CircleMarker
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("circulos").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.circleMarker(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
-  //Recorrer Polygons
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mapa");
-      dbo.collection("poligonos").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        for(i = 0; i < result.length; i++){
-          var m = L.Polygon(result[i].coordinates).addTo(map);
-          m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        }
-        db.close();
-    });
-  });
-
 //TODO Funciones para crear markers, circle, circlemarkers y polygons para simplificar el código
 
+//Se ejecuta al crear un marker/circle/etc.
 map.on('draw:created', function (e) {
     var type = e.layerType,
         layer = e.layer;
@@ -99,7 +58,7 @@ map.on('draw:created', function (e) {
                 confirmButtonText: 'Salir'
               })
               console.log(desc);
-              console.log(e);
+              //console.log(e);
             }
           })
 
@@ -150,10 +109,60 @@ map.on('draw:created', function (e) {
             });
         map.addLayer(layer);
     }
-}); 
+    drawnItems.addLayer(layer);
+});
+
+//Se ejecuta al usar la opción de borrar marker del toolbar
+map.on('draw:deleted', function (e) {
+  var layers = e.layers;
+  layers.eachLayer(function (layer) {
+      //TODO borrar marcador también de la BD aparte del layer
+  });
+});
+
+//Recorrer markers
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mapa");
+    dbo.collection("marcadores").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      for(i = 0; i < result.length; i++){
+        var m = L.marker(result[i].coordinates).addTo(map);
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+      }
+      db.close();
+  });
+});
+
+//Recorrer Circle y CircleMarker
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mapa");
+    dbo.collection("circulos").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      for(i = 0; i < result.length; i++){
+        var m = L.circleMarker(result[i].coordinates).addTo(map);
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+      }
+      db.close();
+  });
+});
+//Recorrer Polygons
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mapa");
+    dbo.collection("poligonos").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      for(i = 0; i < result.length; i++){
+        var m = L.Polygon(result[i].coordinates).addTo(map);
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+      }
+      db.close();
+  });
+});
 
 //Alerta al clickar un marcador para borrarlo
-map.on('click', function () {
+/*map.on('click', function () {
   Swal.fire({
     title: 'Vas a borrar el marcador, ¿Estás seguro?',
     text: "Esta acción no se puede revertir",
@@ -171,7 +180,7 @@ map.on('click', function () {
       )
     }
   })
-});
+});*/
 
 //https://www.npmjs.com/package/electron-osx-prompt
 
