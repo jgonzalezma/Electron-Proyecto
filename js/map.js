@@ -141,8 +141,6 @@ map.on('draw:created', function (e) {
               console.log(desc);
             }
           })
-          
-        //location.reload();
 
     if (type === 'marker') {
               // Do whatever else you need to. (save to db, add to map etc)
