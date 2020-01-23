@@ -72,53 +72,7 @@ MongoClient.connect(url, function(err, db) {
     });
   });
 
-//Funciones para crear markers, circle, circlemarkers y polygons.
-//Markers
-function saveMarker(){
-       // Do whatever else you need to. (save to db, add to map etc)
-       MongoClient.connect(url, function(err, db) {
-           if (err) throw err;
-           var dbo = db.db("mapa");
-           var myobj = { coordinates: [lat, lng], desc: desc };
-           dbo.collection("marcadores").insertOne(myobj, function(err, res) {
-               if (err) throw err;
-               console.log(e);
-               db.close();
-           });
-           });
-       map.addLayer(layer);
-}
-
-//Circles y circlemarkers
-function saveCircles(){
-    var radius = layer.getRadius();
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mapa");
-        var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
-        dbo.collection("circulos").insertOne(myobj, function(err, res) {
-            if (err) throw err;
-            console.log(e);
-            db.close();
-        });
-        });
-    map.addLayer(layer);
-}
-
-//Polygon
-function savePolygon(){
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mapa");
-        var myobj = { coordinates: [lat, lng], desc: desc };
-        dbo.collection("poligonos").insertOne(myobj, function(err, res) {
-            if (err) throw err;
-            console.log(e);
-            db.close();
-        });
-        });
-    map.addLayer(layer);
-}
+//TODO Funciones para crear markers, circle, circlemarkers y polygons para simplificar el código
 
 map.on('draw:created', function (e) {
     var type = e.layerType,
