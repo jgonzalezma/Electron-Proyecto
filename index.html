@@ -17,8 +17,13 @@
 
 	<!--Custom styles-->
 	<link rel="stylesheet" type="text/css" href="css/login.css">
+	<!-- JQuery validate -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.min.js"></script>
 	<!-- Script de Login -->
 	<script src="js/login.js"></script>
+	<!-- Validacion personalizada -->
+	<script src="js/validate.js"></script>
 </head>
 <body>
 <div class="container">
@@ -35,7 +40,7 @@
 				-->
 			</div>
 			<div class="card-body">
-				<form>
+				<form id="formulario">
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -53,7 +58,7 @@
 						<input type="checkbox">Remember Me
 					</div>
 					<div class="form-group">
-						<input type="button" id="loginbtn" value="Login" class="btn float-right login_btn">
+						<input type="submit" id="loginbtn" value="Login" class="btn float-right login_btn">
 						<input type="button" id="register" onclick="toRegister()" value="Register" class="btn float-right login_btn">
 					</div>
 				</form>
@@ -71,7 +76,6 @@
 		</div>
 	</div>
 </div>
-<script src="js/login.js"></script>
 <script>
 function toRegister(){
 	location.href = "register.html";

@@ -103,3 +103,8 @@ margin-left: 4px;
     margin-left: 1%;
 
 }
+
+/* Validacion */
+.error{
+    color: red;
+}

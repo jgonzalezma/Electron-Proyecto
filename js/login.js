@@ -1,8 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
-
+require('sweetalert2');
 $( "#loginbtn" ).click(function() {
-    var username = document.getElementById('username').value;
+  $("form").validate();
+    /*var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
     console.log(username + "\n" + password);
     MongoClient.connect(url, function(err, db) {
@@ -15,7 +16,6 @@ $( "#loginbtn" ).click(function() {
         document.location.href= 'map.html';
         db.close();
       });
-    });
+    });*/
 
-  }); 
-
+  });
