@@ -1,5 +1,6 @@
 //Variables globales
 var desc = "default";
+var layer, drawnItems;
 //Plugin de alertas
 const Swal = require('sweetalert2')
 //JQuery
@@ -16,7 +17,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
      // FeatureGroup is to store editable layers
      //Toolbar de los marcadores del mapa
-     var drawnItems = new L.FeatureGroup();
+     drawnItems = new L.FeatureGroup();
      map.addLayer(drawnItems);
      var drawControl = new L.Control.Draw({
          edit: {
@@ -160,27 +161,6 @@ MongoClient.connect(url, function(err, db) {
       db.close();
   });
 });
-
-//Alerta al clickar un marcador para borrarlo
-/*map.on('click', function () {
-  Swal.fire({
-    title: 'Vas a borrar el marcador, ¿Estás seguro?',
-    text: "Esta acción no se puede revertir",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Borrar'
-  }).then((result) => {
-    if (result.value) {
-      Swal.fire(
-        'Borrado',
-        'Se ha borrado el marcador',
-        'success'
-      )
-    }
-  })
-});*/
 
 //https://www.npmjs.com/package/electron-osx-prompt
 
