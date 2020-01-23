@@ -59,7 +59,7 @@ map.on('draw:created', function (e) {
                 confirmButtonText: 'Salir'
               })
               console.log(desc);
-              //console.log(e);
+              e.layer.bindPopup("<b>"+desc+"</b>");
             }
           })
 
