@@ -76,7 +76,23 @@ map.on('draw:created', function (e) {
                   });
                   });
               map.addLayer(layer);
-    }
+    }else if (type === 'rectangle'){
+      var radius = layer.getRadius();
+      console.log(radius);
+      var MongoClient = require('mongodb').MongoClient;
+      var url = "mongodb://localhost:27017/";
+      MongoClient.connect(url, function(err, db) {
+          if (err) throw err;
+          var dbo = db.db("mapa");
+          var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
+          dbo.collection("rectangulos").insertOne(myobj, function(err, res) {
+              if (err) throw err;
+              console.log(e);
+              db.close();
+          });
+          });
+      map.addLayer(layer);
+  }
     else if (type === 'circle' || 'circlemarker'){
         var radius = layer.getRadius();
         console.log(radius);
@@ -85,7 +101,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: [lat, lng], radius: radius, desc: "F" };
+            var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -99,7 +115,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: [lat, lng], desc: "F" };
+            var myobj = { coordinates: [lat, lng], desc: desc };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -147,6 +163,21 @@ MongoClient.connect(url, function(err, db) {
       db.close();
   });
 });
+
+//Recorrer Rectangles
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mapa");
+    dbo.collection("rectangulos").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      for(i = 0; i < result.length; i++){
+        var m = L.circleMarker(result[i].coordinates).addTo(map);
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+      }
+      db.close();
+  });
+});
+
 //Recorrer Polygons
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
