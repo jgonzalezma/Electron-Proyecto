@@ -61,9 +61,7 @@ map.on('draw:created', function (e) {
               console.log(desc);
               e.layer.bindPopup("<b>"+desc+"</b>");
             }
-          })
-
-    if (type === 'marker') {
+            if (type === 'marker') {
               // Do whatever else you need to. (save to db, add to map etc)
               var MongoClient = require('mongodb').MongoClient;
               var url = "mongodb://localhost:27017/";
@@ -110,6 +108,7 @@ map.on('draw:created', function (e) {
             });
         map.addLayer(layer);
     }
+      })
     drawnItems.addLayer(layer);
 });
 

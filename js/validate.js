@@ -1,5 +1,6 @@
 //Validacion LOGIN de formulario con Jquery
 $(document).ready(function() {
+  console.log("hola");
     $("#formulario").validate({
       rules : {
         username : {
