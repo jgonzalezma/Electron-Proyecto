@@ -5,7 +5,6 @@ Tareas por hacer:
   <li>Añadir los marcadores antiguos (los que recorre la bd al principio) al layer</li>
   <li>Hacer la validación del register y del login</li>
   <li>Hacer que el login funcione correctamente</li>
-  <li>Guardar desc correctamente, problemas para recoger la variable que quiero</li>
   <li>Guardar bien el radius de los circulos (se guardan en bd pero todos con un radius por defecto)</li>
   <li>Poder crear tambien rectangles y polygons, no estan hechos</li>
   <li>PRUEBA: Poner div a la derecha con listado de grupos, pensar como hacerlo</li>
