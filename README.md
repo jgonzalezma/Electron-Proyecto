@@ -7,6 +7,7 @@ Tareas por hacer:
   <li>Hacer que el login funcione correctamente</li>
   <li>Guardar bien el radius de los circulos (se guardan en bd pero todos con un radius por defecto)</li>
   <li>Poder crear tambien rectangles y polygons, no estan hechos</li>
+  <li>Poner autoincrement ids a todos los markers, circles, etc. para luego poder cogerlos y borrarlos/editarlos en bd</li>
   <li>PRUEBA: Poner div a la derecha con listado de grupos, pensar como hacerlo</li>
   <li>Opcional: Poder editar el layer con la opcion edit del toolbar</li>
 </ul>
