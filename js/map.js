@@ -1,6 +1,6 @@
 //Variables globales
 var desc = "default";
-var layer, drawnItems;
+var layer;
 //Plugin de alertas
 const Swal = require('sweetalert2')
 //JQuery
@@ -17,7 +17,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
      // FeatureGroup is to store editable layers
      //Toolbar de los marcadores del mapa
-     drawnItems = new L.FeatureGroup();
+     var drawnItems = new L.FeatureGroup();
      map.addLayer(drawnItems);
      var drawControl = new L.Control.Draw({
          edit: {
@@ -37,9 +37,6 @@ function onMapClick(e) {
 map.on('draw:created', function (e) {
     var type = e.layerType,
         layer = e.layer;
-        //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
-        var lat = layer.getLatLng().lat;
-        var lng = layer.getLatLng().lng;
         Swal.mixin({
             input: 'text',
             confirmButtonText: 'Next &rarr;',
@@ -58,10 +55,13 @@ map.on('draw:created', function (e) {
                 title: '¡Marcador creado!',
                 confirmButtonText: 'Salir'
               })
-              console.log(desc);
+              console.log(e);
               e.layer.bindPopup("<b>"+desc+"</b>");
             }
             if (type === 'marker') {
+              //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
+              var lat = layer.getLatLng().lat;
+              var lng = layer.getLatLng().lng;
               // Do whatever else you need to. (save to db, add to map etc)
               var MongoClient = require('mongodb').MongoClient;
               var url = "mongodb://localhost:27017/";
@@ -76,24 +76,7 @@ map.on('draw:created', function (e) {
                   });
                   });
               map.addLayer(layer);
-    }else if (type === 'rectangle'){
-      var radius = layer.getRadius();
-      console.log(radius);
-      var MongoClient = require('mongodb').MongoClient;
-      var url = "mongodb://localhost:27017/";
-      MongoClient.connect(url, function(err, db) {
-          if (err) throw err;
-          var dbo = db.db("mapa");
-          var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
-          dbo.collection("rectangulos").insertOne(myobj, function(err, res) {
-              if (err) throw err;
-              console.log(e);
-              db.close();
-          });
-          });
-      map.addLayer(layer);
-  }
-    else if (type === 'circle' || 'circlemarker'){
+    }else if (type === 'circle' || 'circlemarker'){
         var radius = layer.getRadius();
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
@@ -109,7 +92,8 @@ map.on('draw:created', function (e) {
             });
             });
         map.addLayer(layer);
-    }else if (type === 'polygon'){
+    }else if (type === 'polygon'){ //Recoge poligonos y rectangulos
+        var radius = layer.getRadius();
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
@@ -122,10 +106,9 @@ map.on('draw:created', function (e) {
                 db.close();
             });
             });
-        map.addLayer(layer);
     }
       })
-    drawnItems.addLayer(layer);
+    drawnItems.addLayer(layer); 
 });
 
 //Se ejecuta al usar la opción de borrar marker del toolbar
@@ -145,6 +128,7 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.marker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        drawnItems.addLayer(m); 
       }
       db.close();
   });
@@ -159,26 +143,13 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.circleMarker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        drawnItems.addLayer(m);
       }
       db.close();
   });
 });
 
-//Recorrer Rectangles
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  var dbo = db.db("mapa");
-    dbo.collection("rectangulos").find({}).toArray(function(err, result) {
-      if (err) throw err;
-      for(i = 0; i < result.length; i++){
-        var m = L.circleMarker(result[i].coordinates).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-      }
-      db.close();
-  });
-});
-
-//Recorrer Polygons
+//Recorrer Polygons y rectangles
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   var dbo = db.db("mapa");
@@ -187,11 +158,11 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.Polygon(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        drawnItems.addLayer(m); 
       }
       db.close();
   });
 });
-
 //https://www.npmjs.com/package/electron-osx-prompt
 
 //Ejemplo borrar markers desde el toolbar https://leaflet.github.io/Leaflet.draw/docs/examples/popup.html

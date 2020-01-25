@@ -2,7 +2,8 @@
 $("#formulario").validate({
   rules : {
     username : {
-      maxlength : 3,
+      maxlength : 12,
+      minlength : 4,
       required : true
     },
 
@@ -16,12 +17,13 @@ $("#formulario").validate({
 
   messages : {
     username : {
-      maxlength : "Máximo 3 caracteres",
-  required : "Campo obligatorio"
+      maxlength : "Máximo de 12 caracteres",
+      minlength: "Mínimo de 4 carácteres",
+      required : "Campo obligatorio"
     },
 
     password : {
-      maxlength : "Máximo 20 caracteres",
+      maxlength : "Máximo de 20 caracteres",
       minlength : "Mínimo de 8 carácteres",
       required : "Campo obligatorio"
     }
