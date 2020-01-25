@@ -2,7 +2,9 @@
 var desc = "default";
 var layer;
 //Plugin de alertas
-const Swal = require('sweetalert2')
+const Swal = require('sweetalert2');
+//Plugin autoincrement de mongo
+var autoIncrement = require("mongodb-autoincrement");
 //JQuery
 window.jQuery = window.$ = require('jquery');
 //Conexion de Mongo
@@ -77,6 +79,7 @@ map.on('draw:created', function (e) {
                   });
               map.addLayer(layer);
     }else if (type === 'circle' || 'circlemarker'){
+        var center = layer.getLatLng();
         var radius = layer.getRadius();
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
@@ -84,7 +87,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: [lat, lng], radius: radius, desc: desc };
+            var myobj = { coordinates: center, radius: radius, desc: desc };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -92,8 +95,9 @@ map.on('draw:created', function (e) {
             });
             });
         map.addLayer(layer);
-    }else if (type === 'polygon'){ //Recoge poligonos y rectangulos
-        var radius = layer.getRadius();
+    }else if (type === 'polygon' && type == 'rectangle'){ //Recoge poligonos y rectangulos
+        var lat = layer.getLatLng().lat;
+        var lng = layer.getLatLng().lng;
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
@@ -111,11 +115,22 @@ map.on('draw:created', function (e) {
     drawnItems.addLayer(layer); 
 });
 
-//Se ejecuta al usar la opción de borrar marker del toolbar
+//Se ejecuta al usar la opción de borrar
 map.on('draw:deleted', function (e) {
   var layers = e.layers;
   layers.eachLayer(function (layer) {
       //TODO borrar marcador también de la BD aparte del layer
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mapa");
+        var id;
+        var myquery = { _id: id };
+        dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
+          if (err) throw err;
+          console.log("Eliminado");
+          db.close();
+        });
+      });
   });
 });
 
@@ -128,7 +143,8 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.marker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        drawnItems.addLayer(m); 
+        drawnItems.addLayer(m);
+        console.log(result[i]._id); 
       }
       db.close();
   });
@@ -143,6 +159,7 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.circleMarker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        m.setRadius(result[i].radius);
         drawnItems.addLayer(m);
       }
       db.close();

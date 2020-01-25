@@ -18,6 +18,7 @@
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
     "mongodb": "^3.4.1",
+    "mongodb-autoincrement": "^1.0.1",
     "sweetalert2": "^9.6.1"
   }
 }
