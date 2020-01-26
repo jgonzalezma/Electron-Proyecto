@@ -83,13 +83,14 @@ map.on('draw:created', function (e) {
     }else if (layer instanceof L.Circle || layer instanceof L.CircleMarker){
         var center = layer.getLatLng();
         var radius = layer._radius;
+        var mRadius = layer.getRadius();
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: center, radius: radius, desc: desc };
+            var myobj = { coordinates: center, radius: radius, mRadius: mRadius, desc: desc };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log("circles");
@@ -99,14 +100,13 @@ map.on('draw:created', function (e) {
             });
         map.addLayer(layer);
     }else if (layer instanceof L.Polygon){
-        var latlngs = layer._defaultShape ? layer._defaultShape() : layer.getLatLngs();
-        var area = L.GeometryUtil.geodesicArea(latlngs);
+        var latlngs = layer.getBounds();
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: latlngs, desc: desc };
+            var myobj = { latlngs: latlngs, desc: desc };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log("rectangulo o polygon");
