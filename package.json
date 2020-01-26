@@ -1,5 +1,5 @@
 {
-  "name": "prueba_mapa",
+  "name": "Rescate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,11 +12,13 @@
     "electron": "^7.1.7"
   },
   "dependencies": {
-    "electron-better-dialog": "^1.0.6",
-    "firebase": "^7.7.0",
+    "bcryptjs": "^2.4.3",
     "jquery": "^3.4.1",
+    "jquery-validation": "^1.19.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
-    "mongodb": "^3.4.1"
+    "mongodb": "^3.4.1",
+    "mongodb-autoincrement": "^1.0.1",
+    "sweetalert2": "^9.6.1"
   }
 }

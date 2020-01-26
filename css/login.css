@@ -89,6 +89,22 @@ margin-left: 4px;
 }
 
 /* Añadidos */
+/* index.html */
 #loginbtn{
     margin-left: 1%;
+}
+/* register.html */
+#btnRegistrar{
+    width: 120px;
+}
+
+#volver{
+    width: 120px;
+    margin-left: 1%;
+
+}
+
+/* Validacion */
+.error{
+    color: red;
 }
