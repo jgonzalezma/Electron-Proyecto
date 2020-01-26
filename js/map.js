@@ -170,5 +170,3 @@ map.on('draw:created', function (e) {
         map.addLayer(layer);
     }
 }); 
-
-//https://www.npmjs.com/package/electron-osx-prompt
