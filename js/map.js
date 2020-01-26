@@ -82,7 +82,7 @@ map.on('draw:created', function (e) {
               map.addLayer(layer);
     }else if (layer instanceof L.Circle || layer instanceof L.CircleMarker){
         var center = layer.getLatLng();
-        var radius = layer.getRadius();
+        var radius = layer._radius;
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
@@ -130,9 +130,6 @@ map.on('draw:created', function (e) {
           });
           });
     }
-<<<<<<< HEAD
-}); 
-=======
       })
     drawnItems.addLayer(layer); 
 });
@@ -217,4 +214,3 @@ MongoClient.connect(url, function(err, db) {
       db.close();
   });
 });
->>>>>>> 2c282476b7910540c1ee000a8f17afcb8e44bafb
