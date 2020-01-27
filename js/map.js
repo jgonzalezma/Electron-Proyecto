@@ -2,6 +2,7 @@
 var desc;
 var layer;
 var arr  = [];
+var grupos = [];
 //Plugin de alertas
 const Swal = require('sweetalert2');
 //Plugin autoincrement de mongo
@@ -34,6 +35,20 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 //Ver escala
 L.control.scale().addTo(map);
 
+//Meter los grupos de la bd en el array de grupos
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mapa");
+  dbo.collection("grupos").find({}).toArray(function(err, result) {
+    for(i = 0; i < result.length; i++){
+      grupos.push(result[i]);
+    }
+    if (err) throw err;
+    console.log(grupos);
+    db.close();
+  });
+});
+
 /*function onMapClick(e) {
     console.log(e.latlng);
 }
@@ -47,12 +62,11 @@ map.on('draw:created', function (e) {
         var inputOptionsPromise = new Promise(function (resolve) {
           // get your data and pass it to resolve()
           setTimeout(function () {
-            resolve({
-              'Zona de rescate': 'Zona de rescate',
-              'Rescate 1': 'Rescate 1',
-              'Rescate 2': 'Rescate 2',
-              'Rescate 3': 'Rescate 3'
-            })
+            for(i = 0; i < grupos.length; i++){
+              resolve({
+                'Opcion' : grupos[i].nombre,
+              })
+            }
           }, 2000)
         })
         Swal.mixin({
