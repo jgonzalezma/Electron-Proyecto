@@ -86,12 +86,13 @@ map.on('draw:created', function (e) {
               //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
               lat = layer.getLatLng().lat;
               lng = layer.getLatLng().lng;
+              var rId = Math.floor(Math.random() * 1000000000);
               var MongoClient = require('mongodb').MongoClient;
               var url = "mongodb://localhost:27017/";
               MongoClient.connect(url, function(err, db) {
                   if (err) throw err;
                   var dbo = db.db("mapa");
-                  var myobj = { coordinates: [lat, lng], desc: desc, grupo: grupo };
+                  var myobj = { rId: rId, coordinates: [lat, lng], desc: desc, grupo: grupo };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
                       console.log(e);
@@ -105,13 +106,14 @@ map.on('draw:created', function (e) {
         var center = layer.getLatLng();
         var radius = layer._radius;
         var mRadius = layer.getRadius();
+        var rId = Math.floor(Math.random() * 1000000000);
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: center, radius: radius, mRadius: mRadius, desc: desc, grupo: grupo };
+            var myobj = { rId: rId, coordinates: center, radius: radius, mRadius: mRadius, desc: desc, grupo: grupo };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -123,12 +125,13 @@ map.on('draw:created', function (e) {
         map.addLayer(layer);
     }else if (layer instanceof L.Polygon){
         var latlngs = layer.getBounds();
+        var rId = Math.floor(Math.random() * 1000000000);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { latlngs: latlngs, desc: desc, grupo: grupo };
+            var myobj = { rId: rId, latlngs: latlngs, desc: desc, grupo: grupo };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log("rectangulo o polygon");
@@ -139,12 +142,13 @@ map.on('draw:created', function (e) {
             });
     }else if(layer instanceof L.Polyline){
       var latlngs = layer.getLatLng();
+      var rId = Math.floor(Math.random() * 1000000000);
       var MongoClient = require('mongodb').MongoClient;
       var url = "mongodb://localhost:27017/";
       MongoClient.connect(url, function(err, db) {
           if (err) throw err;
           var dbo = db.db("mapa");
-          var myobj = { coordinates: latlngs, desc: desc, grupo: grupo };
+          var myobj = { rId: rId, coordinates: latlngs, desc: desc, grupo: grupo };
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
               console.log("rectangulo o polygon");
@@ -158,25 +162,6 @@ map.on('draw:created', function (e) {
     drawnItems.addLayer(layer); 
 });
 
-//Se ejecuta al usar la opción de borrar
-map.on('draw:deleted', function (e) {
-  var layers = e.layers;
-  layers.eachLayer(function (layer) {
-      //TODO borrar marcador también de la BD aparte del layer
-      MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mapa");
-        var id;
-        var myquery = { _id: id };
-        dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
-          if (err) throw err;
-          console.log("Eliminado");
-          db.close();
-        });
-      });
-  });
-});
-
 //Recorrer markers
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
@@ -187,7 +172,6 @@ MongoClient.connect(url, function(err, db) {
         var m = L.marker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         drawnItems.addLayer(m);
-        //console.log(result[i]._id); 
       }
       db.close();
   });
@@ -236,5 +220,24 @@ MongoClient.connect(url, function(err, db) {
         drawnItems.addLayer(m); 
       }
       db.close();
+  });
+});
+
+//Se ejecuta al usar la opción de borrar
+map.on('draw:deleted', function (e) {
+  var layers = e.layers;
+  layers.eachLayer(function (layer) {
+      //TODO borrar marcador también de la BD aparte del layer
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mapa");
+        var rId;
+        var myquery = { rId: rId };
+        dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
+          if (err) throw err;
+          console.log("Eliminado");
+          db.close();
+        });
+      });
   });
 });
