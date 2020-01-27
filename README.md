@@ -8,5 +8,6 @@ Tareas por hacer:
   <li>Algun boton para poder crear grupos, despues al crear un marker se deberia de desplegar el listado de los grupos que se han creado con este boton</li>
   <li>Poder borrar estos grupos</li>
   <li>Sacar un listado en el div derecho con los grupos creados</li>
+  <li>Meter en los markers un array de VOLUNTARIOS en la bd</li>
 </ul>
 <p>Demo ejemplo: https://leaflet.github.io/Leaflet.draw/docs/examples/popup.html</p>
