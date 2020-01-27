@@ -118,7 +118,9 @@ map.on('draw:created', function (e) {
                       if (err) throw err;
                       console.log(e);
                       arr.push(e);
-                      //TODO enviar alerta al servidor
+                      //Envía la alerta al servidor
+                      var socket = io.connect('http://localhost:3000');
+                      socket.emit('insertaMarker', 'Un rescate (marcador) ha sido insertado');
                       db.close();
                   });
                   });
@@ -139,7 +141,9 @@ map.on('draw:created', function (e) {
                 if (err) throw err;
                 console.log(e);
                 console.log(e.layerType);
-                //TODO enviar alerta al servidor
+                //Envía la alerta al servidor
+                var socket = io.connect('http://localhost:3000');
+                socket.emit('insertaCirculo', 'Un circulo ha sido insertado');
                 db.close();
             });
             });
@@ -156,7 +160,9 @@ map.on('draw:created', function (e) {
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(latlngs);
-                //TODO enviar alerta al servidor
+                //Envía la alerta al servidor
+                var socket = io.connect('http://localhost:3000');
+                socket.emit('insertaPoligono', 'Un poligono ha sido insertado');
                 db.close();
             });
             });
@@ -172,7 +178,9 @@ map.on('draw:created', function (e) {
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
               console.log("polyline");
-              //TODO enviar alerta al servidor
+              //Envía la alerta al servidor
+              var socket = io.connect('http://localhost:3000');
+              socket.emit('insertaPoliline', 'Un poliline ha sido insertado');
               db.close();
           });
           });
