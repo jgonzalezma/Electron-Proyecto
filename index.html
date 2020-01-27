@@ -40,10 +40,8 @@
   //Pruebas para conectar al server de node
   $("#nodeBtn").click(function(){
     var socket = io.connect('http://localhost:3000');
-    socket.on('chat', function (data) {
-    console.log(data);
-    socket.emit('conectado desde electron');
-  });
+    socket.emit('prueba', 'Hola desde electron');
+
   });
   </script>
 </html>
