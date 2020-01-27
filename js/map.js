@@ -1,6 +1,7 @@
 //Variables globales
 var desc;
 var layer;
+var arr  = [];
 //Plugin de alertas
 const Swal = require('sweetalert2');
 //Plugin autoincrement de mongo
@@ -47,10 +48,10 @@ map.on('draw:created', function (e) {
           // get your data and pass it to resolve()
           setTimeout(function () {
             resolve({
+              'Zona de rescate': 'Zona de rescate',
               'Rescate 1': 'Rescate 1',
               'Rescate 2': 'Rescate 2',
-              'Rescate 3': 'Rescate 3',
-              'Zona de rescate': 'Zona de rescate'
+              'Rescate 3': 'Rescate 3'
             })
           }, 2000)
         })
@@ -96,6 +97,7 @@ map.on('draw:created', function (e) {
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
                       console.log(e);
+                      arr.push(e);
                       //TODO enviar alerta al servidor
                       db.close();
                   });
@@ -104,8 +106,7 @@ map.on('draw:created', function (e) {
     }else if (layer instanceof L.Circle || layer instanceof L.CircleMarker){
         //e.layerType = "circlemarker";
         var center = layer.getLatLng();
-        var radius = layer._radius;
-        var mRadius = layer.getRadius();
+        var radius = layer.getRadius();
         var rId = Math.floor(Math.random() * 1000000000);
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
@@ -113,7 +114,7 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { rId: rId, coordinates: center, radius: radius, mRadius: mRadius, desc: desc, grupo: grupo };
+            var myobj = { rId: rId, coordinates: center, radius: radius, desc: desc, grupo: grupo };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
@@ -184,9 +185,8 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("circulos").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        var m = L.circleMarker(result[i].coordinates).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        m.setRadius(result[i].radius);        
+        var m = L.circle(result[i].coordinates, {radius: result[i].radius}).addTo(map);
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();      
         drawnItems.addLayer(m);
       }
       db.close();
@@ -231,7 +231,9 @@ map.on('draw:deleted', function (e) {
       MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mapa");
-        var rId;
+        /*for(i=0; i < arr.length; i++){
+
+        }*/
         var myquery = { rId: rId };
         dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
           if (err) throw err;
