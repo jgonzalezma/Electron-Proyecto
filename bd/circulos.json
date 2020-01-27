@@ -1,1 +1,1 @@
-{"_id":{"$oid":"5e1ef47da23fbd1d24267398"},"coordinates":[{"$numberDouble":"43.36412734793574"},{"$numberDouble":"-1.9960784912109377"}],"radius":{"$numberDouble":"2606.733287267125"},"desc":"Punto y"}
+{"_id":{"$oid":"5e2f5900d5339b1028fbbfad"},"rId":{"$numberInt":"968115184"},"coordinates":{"lat":{"$numberDouble":"43.32367911677617"},"lng":{"$numberDouble":"-1.9302981551820977"}},"radius":{"$numberDouble":"6696.743492716421"},"desc":"Zona 1","grupo":"Opcion"}

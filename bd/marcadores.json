@@ -1,2 +1,1 @@
-{"_id":{"$oid":"5e1c2f42bd6a971dc4735c95"},"coordinates":[{"$numberDouble":"43.31069"},{"$numberDouble":"-1.897545"}],"desc":"Errenteria"}
-{"_id":{"$oid":"5e1c2fbebd6a971dc4735c96"},"coordinates":[{"$numberDouble":"43.267081"},{"$numberDouble":"-2.018909"}],"desc":"Lasarte"}
+{"_id":{"$oid":"5e2f58ecd5339b1028fbbfac"},"rId":{"$numberInt":"795243012"},"coordinates":[{"$numberDouble":"43.31318813919643"},{"$numberDouble":"-1.8987248514610182"}],"desc":"Errenteria","grupo":"Opcion"}
