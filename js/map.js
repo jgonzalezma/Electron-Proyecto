@@ -55,6 +55,14 @@ MongoClient.connect(url, function(err, db) {
 */
 //TODO Funciones para crear markers, circle, circlemarkers y polygons para simplificar el código
 
+
+//Iterar grupos para añadir el resultado despues
+var grupos_nombre = [];
+for(i = 0; i < grupos.length; i++){
+  grupos_nombre.push(grupos[i]);
+}
+console.log("grupos nombre" + grupos_nombre);
+
 //Se ejecuta al crear un marker/circle/etc.
 map.on('draw:created', function (e) {
     var type = e.layerType,
@@ -62,11 +70,9 @@ map.on('draw:created', function (e) {
         var inputOptionsPromise = new Promise(function (resolve) {
           // get your data and pass it to resolve()
           setTimeout(function () {
-            for(i = 0; i < grupos.length; i++){
               resolve({
-                'Opcion' : grupos[i].nombre,
+                'Opcion' : grupos_nombre[0],
               })
-            }
           }, 2000)
         })
         Swal.mixin({
