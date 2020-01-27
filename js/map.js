@@ -22,6 +22,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
      var drawnItems = new L.FeatureGroup();
      map.addLayer(drawnItems);
      var drawControl = new L.Control.Draw({
+         draw: {
+          circlemarker: false
+         },
          edit: {
              featureGroup: drawnItems
          }
@@ -81,6 +84,7 @@ map.on('draw:created', function (e) {
                   });
               map.addLayer(layer);
     }else if (layer instanceof L.Circle || layer instanceof L.CircleMarker){
+        e.layerType = "circlemarker";
         var center = layer.getLatLng();
         var radius = layer._radius;
         var mRadius = layer.getRadius();
@@ -93,8 +97,8 @@ map.on('draw:created', function (e) {
             var myobj = { coordinates: center, radius: radius, mRadius: mRadius, desc: desc };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
-                console.log("circles");
                 console.log(e);
+                console.log(e.layerType);
                 db.close();
             });
             });
