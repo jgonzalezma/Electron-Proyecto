@@ -136,7 +136,6 @@ map.on('draw:created', function (e) {
             var myobj = { rId: rId, latlngs: latlngs, desc: desc, grupo: grupo };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
-                console.log("rectangulo o polygon");
                 console.log(latlngs);
                 //TODO enviar alerta al servidor
                 db.close();
@@ -200,8 +199,7 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("poligonos").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        console.log(result[i].latlngs);
-        var m = L.Polygon(result[i].latlngs).addTo(map);
+        var m = L.polygon(result[i].latlngs).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         drawnItems.addLayer(m);
       }
@@ -216,7 +214,7 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("polilines").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        var m = L.Polygon(result[i].latlngs).addTo(map);
+        var m = L.polygon(result[i].latlngs).addTo(map);
         //m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         drawnItems.addLayer(m); 
       }
