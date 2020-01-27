@@ -125,7 +125,7 @@ map.on('draw:created', function (e) {
             });
         map.addLayer(layer);
     }else if (layer instanceof L.Polygon){
-        var latlngs = layer.getBounds();
+        var latlngs = layer.getLatLngs()[0];
         var rId = Math.floor(Math.random() * 1000000000);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
@@ -136,7 +136,6 @@ map.on('draw:created', function (e) {
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log("rectangulo o polygon");
-                console.log(e);
                 //TODO enviar alerta al servidor
                 db.close();
             });
@@ -153,7 +152,6 @@ map.on('draw:created', function (e) {
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
               console.log("rectangulo o polygon");
-              console.log(e);
               //TODO enviar alerta al servidor
               db.close();
           });
@@ -200,8 +198,9 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("poligonos").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        var m = L.Polygon(result[i].coordinates).addTo(map);
+        var m = L.Polygon(result[i].latlngs).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        console.log(m);
         drawnItems.addLayer(m); 
       }
       db.close();
@@ -215,7 +214,7 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("polilines").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        var m = L.Polygon(result[i].coordinates).addTo(map);
+        var m = L.Polygon(result[i].latlngs).addTo(map);
         //m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         drawnItems.addLayer(m); 
       }
