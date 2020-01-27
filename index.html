@@ -14,6 +14,8 @@
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
     integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
     crossorigin=""></script>
+    <!-- Socket.io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <title>Panel de control</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
@@ -36,6 +38,12 @@
   <script src="js/grupos.js"></script>
   <script>
   //Pruebas para conectar al server de node
-  
+  $("#nodeBtn").click(function(){
+    var socket = io.connect('http://localhost:3000');
+    socket.on('chat', function (data) {
+    console.log(data);
+    socket.emit('conectado desde electron');
+  });
+  });
   </script>
 </html>
