@@ -126,7 +126,6 @@ map.on('draw:created', function (e) {
         map.addLayer(layer);
     }else if (layer instanceof L.Polygon){
         var latlngs = layer.getLatLngs()[0];
-        console.log(latlngs);
         var rId = Math.floor(Math.random() * 1000000000);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
@@ -142,14 +141,14 @@ map.on('draw:created', function (e) {
             });
             });
     }else if(layer instanceof L.Polyline){
-      var latlngs = layer.getLatLng();
+      var latlngs = layer.getLatLngs();
       var rId = Math.floor(Math.random() * 1000000000);
       var MongoClient = require('mongodb').MongoClient;
       var url = "mongodb://localhost:27017/";
       MongoClient.connect(url, function(err, db) {
           if (err) throw err;
           var dbo = db.db("mapa");
-          var myobj = { rId: rId, coordinates: latlngs, desc: desc, grupo: grupo };
+          var myobj = { rId: rId, latlngs: latlngs, desc: desc, grupo: grupo };
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
               console.log("polyline");
@@ -214,7 +213,7 @@ MongoClient.connect(url, function(err, db) {
     dbo.collection("polilines").find({}).toArray(function(err, result) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
-        var m = L.polygon(result[i].latlngs).addTo(map);
+        var m = L.polyline(result[i].latlngs).addTo(map);
         //m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         drawnItems.addLayer(m); 
       }
