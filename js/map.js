@@ -23,7 +23,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
      map.addLayer(drawnItems);
      var drawControl = new L.Control.Draw({
          draw: {
-          circlemarker: false
+          circlemarker: true //false
          },
          edit: {
              featureGroup: drawnItems
@@ -43,6 +43,17 @@ L.control.scale().addTo(map);
 map.on('draw:created', function (e) {
     var type = e.layerType,
         layer = e.layer;
+        var inputOptionsPromise = new Promise(function (resolve) {
+          // get your data and pass it to resolve()
+          setTimeout(function () {
+            resolve({
+              'Rescate 1': 'Rescate 1',
+              'Rescate 2': 'Rescate 2',
+              'Rescate 3': 'Rescate 3',
+              'Zona de rescate': 'Zona de rescate'
+            })
+          }, 2000)
+        })
         Swal.mixin({
             input: 'text',
             confirmButtonText: 'Next &rarr;',
@@ -53,10 +64,15 @@ map.on('draw:created', function (e) {
               title: 'Crear marcador',
               text: 'Introduce la descripción del marcador'
             },
-            'Introduce el nombre del grupo'
+            {
+              title: 'Selecciona el grupo',
+              input: 'select',
+              inputOptions: inputOptionsPromise
+            }
           ]).then((result) => {
             if (result.value) {
               desc = result.value[0];
+              grupo = result.value[1];
               Swal.fire({
                 title: '¡Marcador creado!',
                 confirmButtonText: 'Salir'
@@ -75,16 +91,17 @@ map.on('draw:created', function (e) {
               MongoClient.connect(url, function(err, db) {
                   if (err) throw err;
                   var dbo = db.db("mapa");
-                  var myobj = { coordinates: [lat, lng], desc: desc };
+                  var myobj = { coordinates: [lat, lng], desc: desc, grupo: grupo };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
                       console.log(e);
+                      //TODO enviar alerta al servidor
                       db.close();
                   });
                   });
               map.addLayer(layer);
     }else if (layer instanceof L.Circle || layer instanceof L.CircleMarker){
-        e.layerType = "circlemarker";
+        //e.layerType = "circlemarker";
         var center = layer.getLatLng();
         var radius = layer._radius;
         var mRadius = layer.getRadius();
@@ -94,11 +111,12 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { coordinates: center, radius: radius, mRadius: mRadius, desc: desc };
+            var myobj = { coordinates: center, radius: radius, mRadius: mRadius, desc: desc, grupo: grupo };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log(e);
                 console.log(e.layerType);
+                //TODO enviar alerta al servidor
                 db.close();
             });
             });
@@ -110,11 +128,12 @@ map.on('draw:created', function (e) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var dbo = db.db("mapa");
-            var myobj = { latlngs: latlngs, desc: desc };
+            var myobj = { latlngs: latlngs, desc: desc, grupo: grupo };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
                 console.log("rectangulo o polygon");
                 console.log(e);
+                //TODO enviar alerta al servidor
                 db.close();
             });
             });
@@ -125,11 +144,12 @@ map.on('draw:created', function (e) {
       MongoClient.connect(url, function(err, db) {
           if (err) throw err;
           var dbo = db.db("mapa");
-          var myobj = { coordinates: latlngs, desc: desc };
+          var myobj = { coordinates: latlngs, desc: desc, grupo: grupo };
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
               console.log("rectangulo o polygon");
               console.log(e);
+              //TODO enviar alerta al servidor
               db.close();
           });
           });
@@ -182,7 +202,7 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.circleMarker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
-        m.setRadius(result[i].radius);
+        m.setRadius(result[i].radius);        
         drawnItems.addLayer(m);
       }
       db.close();
