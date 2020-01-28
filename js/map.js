@@ -1,6 +1,5 @@
 //Variables globales
 var desc;
-var layer;
 var arr  = [];
 var grupos = [];
 //Plugin de alertas
@@ -107,7 +106,8 @@ map.on('draw:created', function (e) {
               //Guardo las coordenadas en variables lat y lng para luego crear el objeto con las variables
               lat = layer.getLatLng().lat;
               lng = layer.getLatLng().lng;
-              var rId = Math.floor(Math.random() * 1000000000);
+              var rId = L.stamp(layer);
+              //var rId = Math.floor(Math.random() * 1000000000);
               var MongoClient = require('mongodb').MongoClient;
               var url = "mongodb://localhost:27017/";
               MongoClient.connect(url, function(err, db) {
@@ -116,7 +116,7 @@ map.on('draw:created', function (e) {
                   var myobj = { rId: rId, coordinates: [lat, lng], desc: desc, grupo: grupo };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
-                      console.log(e);
+                      console.log(rId);
                       arr.push(e);
                       //Envía la alerta al servidor
                       var socket = io.connect('http://localhost:3000');
@@ -129,7 +129,8 @@ map.on('draw:created', function (e) {
         //e.layerType = "circlemarker";
         var center = layer.getLatLng();
         var radius = layer.getRadius();
-        var rId = Math.floor(Math.random() * 1000000000);
+        var rId = L.stamp(layer);
+        //var rId = Math.floor(Math.random() * 1000000000);
         console.log(radius);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
@@ -150,7 +151,8 @@ map.on('draw:created', function (e) {
         map.addLayer(layer);
     }else if (layer instanceof L.Polygon){
         var latlngs = layer.getLatLngs()[0];
-        var rId = Math.floor(Math.random() * 1000000000);
+        var rId = L.stamp(layer);
+        //var rId = Math.floor(Math.random() * 1000000000);
         var MongoClient = require('mongodb').MongoClient;
         var url = "mongodb://localhost:27017/";
         MongoClient.connect(url, function(err, db) {
@@ -168,7 +170,8 @@ map.on('draw:created', function (e) {
             });
     }else if(layer instanceof L.Polyline){
       var latlngs = layer.getLatLngs();
-      var rId = Math.floor(Math.random() * 1000000000);
+      var rId = L.stamp(layer);
+      //var rId = Math.floor(Math.random() * 1000000000);
       var MongoClient = require('mongodb').MongoClient;
       var url = "mongodb://localhost:27017/";
       MongoClient.connect(url, function(err, db) {
@@ -254,18 +257,48 @@ map.on('draw:deleted', function (e) {
   var layers = e.layers;
   layers.eachLayer(function (layer) {
       //TODO borrar marcador también de la BD aparte del layer
-      MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mapa");
-        /*for(i=0; i < arr.length; i++){
-
-        }*/
-        var myquery = { rId: rId };
-        dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
+        MongoClient.connect(url, function(err, db) {
           if (err) throw err;
-          console.log("Eliminado");
-          db.close();
+          var dbo = db.db("mapa");
+          //Array donde se recorren todos los marcadores/circles/etc. para despues comparar la id y eliminarlos
+          var rId = [];
+          var myquery = { rId: rId };
+          if(layer instanceof L.Marker){
+            dbo.collection("marcadores").find({}).toArray(function(err, result) {
+              if (err) throw err;
+              for(i = 0; i < result.length; i++){
+                rId.push(L.marker(result[i].rId));
+                console.log(result[i].rId);
+              }
+              console.log(rId);
+              db.close();
+          });
+            dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
+              if (err) throw err;
+              console.log("Marcador eliminado");
+              db.close();
+            });
+          }else if(layer instanceof L.Polygon){
+            dbo.collection("poligonos").deleteOne(myquery, function(err, obj) {
+              if (err) throw err;
+              console.log("Poligono eliminado");
+              db.close();
+            });
+          }else if(layer instanceof L.Circle || layer instanceof L.CircleMarker){
+            dbo.collection("circulos").deleteOne(myquery, function(err, obj) {
+              if (err) throw err;
+              console.log("Circulo eliminado");
+              db.close();
+            });
+          }else if(layer instanceof L.Polyline){
+            dbo.collection("polilines").deleteOne(myquery, function(err, obj) {
+              if (err) throw err;
+              console.log("Poliline eliminado");
+              db.close();
+            });
+          }
         });
-      });
   });
 });
+
+//Usar getLayer() para recibir la id interna del marcador
