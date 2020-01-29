@@ -1,7 +1,7 @@
 # Electron-Proyecto
 Tareas por hacer:
 <ul>
-  <li>Borrar y editar marcadores de la bd al clickar borrar en el toolbar, ahora solo los borra del layer. Se coge un id que da el propio layer</li>
+  <li>Borrar y editar marcadores de la bd al clickar borrar en el toolbar, ahora solo los borra del layer.</li>
   <li>HECHO - Hacer la conexión con el servidor de Node</li>
   <li>Crear alertas cada vez que se crea cualquier marker, enviarlos al servidor y que haga broadcast a todos</li>
   <li>Poder borrar estos grupos</li>
