@@ -117,7 +117,12 @@ map.on('draw:created', function (e) {
                   var myobj = { rId: rId, coordinates: [lat, lng], desc: desc, grupo: grupo };
                   dbo.collection("marcadores").insertOne(myobj, function(err, res) {
                       if (err) throw err;
-                      console.log(rId);
+                      //Guardamos todas las variables en el options
+                      e.layer.options.rId = myobj.rId;
+                      e.layer.options.lat = myobj.coordinates[0];
+                      e.layer.options.lng = myobj.coordinates[1];
+                      e.layer.options.desc = myobj.desc;
+                      e.layer.options.grupo = myobj.grupo;
                       arr.push(e);
                       //Envía la alerta al servidor
                       socket.emit('insertaMarker', 'Un rescate (marcador) ha sido insertado');
@@ -139,8 +144,11 @@ map.on('draw:created', function (e) {
             var myobj = { rId: rId, coordinates: center, radius: radius, desc: desc, grupo: grupo };
             dbo.collection("circulos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
-                console.log(e);
-                console.log(e.layerType);
+                e.layer.options.rId = myobj.rId;
+                e.layer.options.center = myobj.coordinates;
+                e.layer.options.radiusBD = myobj.radius;
+                e.layer.options.desc = myobj.desc;
+                e.layer.options.grupo = myobj.grupo;
                 //Envía la alerta al servidor
                 socket.emit('insertaCirculo', 'Un circulo ha sido insertado');
                 db.close();
@@ -159,6 +167,10 @@ map.on('draw:created', function (e) {
             var myobj = { rId: rId, latlngs: latlngs, desc: desc, grupo: grupo };
             dbo.collection("poligonos").insertOne(myobj, function(err, res) {
                 if (err) throw err;
+                e.layer.options.rId = myobj.rId;
+                e.layer.options.latlngs = myobj.latlngs;
+                e.layer.options.desc = myobj.desc;
+                e.layer.options.grupo = myobj.grupo;
                 console.log(latlngs);
                 //Envía la alerta al servidor
                 socket.emit('insertaPoligono', 'Un poligono ha sido insertado');
@@ -177,6 +189,10 @@ map.on('draw:created', function (e) {
           var myobj = { rId: rId, latlngs: latlngs, desc: desc, grupo: grupo };
           dbo.collection("polilines").insertOne(myobj, function(err, res) {
               if (err) throw err;
+              e.layer.options.rId = myobj.rId;
+              e.layer.options.latlngs = myobj.latlngs;
+              e.layer.options.desc = myobj.desc;
+              e.layer.options.grupo = myobj.grupo;
               console.log("polyline");
               //Envía la alerta al servidor
               socket.emit('insertaPoliline', 'Un poliline ha sido insertado');
@@ -198,6 +214,8 @@ MongoClient.connect(url, function(err, db) {
         var m = L.marker(result[i].coordinates).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
         m.options.rId = result[i].rId;
+        m.options.lat = result[i].coordinates[0];
+        m.options.lng = result[i].coordinates[1];
         drawnItems.addLayer(m);
       }
       db.close();
@@ -299,8 +317,25 @@ map.on('draw:deleted', function (e) {
 map.on('draw:edited', function (e) {
   var layers = e.layers;
   layers.eachLayer(function (layer) {
-      //do whatever you want; most likely save back to db
-      console.log("editando");
+    MongoClient.connect(url, function(err, db) {
+      if(layer instanceof L.Marker){
+        if (err) throw err;
+        var dbo = db.db("mapa");
+        var rId = layer.options.rId;
+        var lat = layer.options.lat;
+        var lng = layer.options.lng;
+        console.log("Latitud: " + lat);
+        console.log("Longitud: " + lng);
+        var myquery = { rId: rId };
+        var newvalues = { $set: {coordinates: [lat, -lng] } };
+        dbo.collection("marcadores").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 marcador editado");
+          db.close();
+        });
+      }
+
+    });
   });
 });
 
