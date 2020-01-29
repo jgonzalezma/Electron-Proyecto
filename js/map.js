@@ -338,5 +338,3 @@ map.on('draw:edited', function (e) {
     });
   });
 });
-
-//Usar getLayer() para recibir la id interna del marcador
