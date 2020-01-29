@@ -324,17 +324,18 @@ map.on('draw:edited', function (e) {
         var rId = layer.options.rId;
         var lat = layer.options.lat;
         var lng = layer.options.lng;
+        var desc = layer.options.desc;
+        var grupo = layer.options.grupo;
         console.log("Latitud: " + lat);
         console.log("Longitud: " + lng);
         var myquery = { rId: rId };
-        var newvalues = { $set: {coordinates: [lat, -lng] } };
+        var newvalues = { $set: {rId: rId, coordinates: [lat, lng], desc: desc, grupo: grupo} };
         dbo.collection("marcadores").updateOne(myquery, newvalues, function(err, res) {
           if (err) throw err;
           console.log("1 marcador editado");
           db.close();
         });
       }
-
     });
   });
 });
