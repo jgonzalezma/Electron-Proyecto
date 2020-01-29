@@ -214,7 +214,8 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.circle(result[i].coordinates, {radius: result[i].radius}).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();      
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        m.options.rId = result[i].rId;      
         drawnItems.addLayer(m);
       }
       db.close();
@@ -230,6 +231,7 @@ MongoClient.connect(url, function(err, db) {
       for(i = 0; i < result.length; i++){
         var m = L.polygon(result[i].latlngs).addTo(map);
         m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        m.options.rId = result[i].rId;
         drawnItems.addLayer(m);
       }
       db.close();
@@ -244,7 +246,8 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.polyline(result[i].latlngs).addTo(map);
-        //m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b>").openPopup();
+        m.options.rId = result[i].rId;
         drawnItems.addLayer(m); 
       }
       db.close();
@@ -252,63 +255,37 @@ MongoClient.connect(url, function(err, db) {
 });
 
 //Se ejecuta al usar la opción de borrar
-var arrayrId = [];
 map.on('draw:deleted', function (e) {
   var layers = e.layers;
   layers.eachLayer(function (layer) {
-      //TODO borrar marcador también de la BD aparte del layer
         MongoClient.connect(url, function(err, db) {
           if (err) throw err;
           var dbo = db.db("mapa");
-          if(layer instanceof L.Marker){
-            dbo.collection("marcadores").find({}).toArray(function(err, result) {
-              if (err) throw err;
-              for(i = 0; i < result.length; i++){
-                //rId.push(L.marker(result[i].rId));
-                console.log("result[i].rId es: " + result[i].rId);
-                arrayrId.push(result[i].rId);
-              }
-              console.log("arrayrId es: " + arrayrId);
-              db.close();
-          });
           var rId = layer.options.rId;
-          var myquery = { rId: arrayrId };
-          //if(arrayrId.includes(myquery)){
+          var myquery = { rId: rId };
+          console.log(rId);
+          if(layer instanceof L.Marker){
             dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
               console.log("Marcador eliminado");
-              
               db.close();
             });
-          //}
           }else if(layer instanceof L.Polygon){
             dbo.collection("poligonos").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
-              //Recorrer Polygons y rectangles
-              MongoClient.connect(url, function(err, db) {
-                if (err) throw err;
-                var dbo = db.db("mapa");
-                  dbo.collection("poligonos").find({}).toArray(function(err, result) {
-                    if (err) throw err;
-                    for(i = 0; i < result.length; i++){
-                      console.log(L.polygon(result[i].latlngs));
-                    }
-                    db.close();
-                });
-              });
               console.log("Poligono eliminado");
               db.close();
             });
           }else if(layer instanceof L.Circle || layer instanceof L.CircleMarker){
             dbo.collection("circulos").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
-              console.log("Circulo eliminado");
+              console.log("Poligono eliminado");
               db.close();
             });
           }else if(layer instanceof L.Polyline){
             dbo.collection("polilines").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
-              console.log("Poliline eliminado");
+              console.log("Poligono eliminado");
               db.close();
             });
           }
