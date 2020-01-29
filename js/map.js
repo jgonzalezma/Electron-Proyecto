@@ -2,6 +2,8 @@
 var desc;
 var arr  = [];
 var grupos = [];
+//Conectar con servidor
+var socket = io.connect('http://localhost:3000');
 //Plugin de alertas
 const Swal = require('sweetalert2');
 //Plugin autoincrement de mongo
@@ -267,29 +269,42 @@ map.on('draw:deleted', function (e) {
           if(layer instanceof L.Marker){
             dbo.collection("marcadores").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
+              socket.emit('deleteMarker', 'Un rescate ha sido eliminado');
               console.log("Marcador eliminado");
               db.close();
             });
           }else if(layer instanceof L.Polygon){
             dbo.collection("poligonos").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
+              socket.emit('deletePoligono', 'Un poligono ha sido eliminado');
               console.log("Poligono eliminado");
               db.close();
             });
           }else if(layer instanceof L.Circle || layer instanceof L.CircleMarker){
             dbo.collection("circulos").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
-              console.log("Poligono eliminado");
+              socket.emit('deleteCirculo', 'Un circulo ha sido eliminado');
+              console.log("Circulo eliminado");
               db.close();
             });
           }else if(layer instanceof L.Polyline){
             dbo.collection("polilines").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
-              console.log("Poligono eliminado");
+              socket.emit('deletePoliline', 'Un poliline ha sido eliminado');
+              console.log("Poliline eliminado");
               db.close();
             });
           }
         });
+  });
+});
+
+//Se ejecuta al usar la opción de editar
+map.on('draw:edited', function (e) {
+  var layers = e.layers;
+  layers.eachLayer(function (layer) {
+      //do whatever you want; most likely save back to db
+      console.log("editando");
   });
 });
 
