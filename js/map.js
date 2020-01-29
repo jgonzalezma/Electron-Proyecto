@@ -120,7 +120,6 @@ map.on('draw:created', function (e) {
                       console.log(rId);
                       arr.push(e);
                       //Envía la alerta al servidor
-                      var socket = io.connect('http://localhost:3000');
                       socket.emit('insertaMarker', 'Un rescate (marcador) ha sido insertado');
                       db.close();
                   });
@@ -143,7 +142,6 @@ map.on('draw:created', function (e) {
                 console.log(e);
                 console.log(e.layerType);
                 //Envía la alerta al servidor
-                var socket = io.connect('http://localhost:3000');
                 socket.emit('insertaCirculo', 'Un circulo ha sido insertado');
                 db.close();
             });
@@ -163,7 +161,6 @@ map.on('draw:created', function (e) {
                 if (err) throw err;
                 console.log(latlngs);
                 //Envía la alerta al servidor
-                var socket = io.connect('http://localhost:3000');
                 socket.emit('insertaPoligono', 'Un poligono ha sido insertado');
                 db.close();
             });
@@ -182,7 +179,6 @@ map.on('draw:created', function (e) {
               if (err) throw err;
               console.log("polyline");
               //Envía la alerta al servidor
-              var socket = io.connect('http://localhost:3000');
               socket.emit('insertaPoliline', 'Un poliline ha sido insertado');
               db.close();
           });
