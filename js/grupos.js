@@ -1,3 +1,5 @@
+//TODO Recorrer los grupos que ya están y ponerlos en la lista
+
 //Crear grupos a través del botón
 $("#crearBtn").click(function(){
     Swal.fire({
@@ -21,7 +23,9 @@ $("#crearBtn").click(function(){
             if (err) throw err;
             console.log("grupo insertado");
             db.close();
+            grupos.push(myobj);
             console.log(grupos);
+            $( "#contLista" ).append( "<li>"+nombre+"</li>" );
           });
         });
     }else if(result.value == "" || result.value == null){
@@ -31,3 +35,5 @@ $("#crearBtn").click(function(){
     }
   });
   });
+
+  //TODO Poder borrar grupos desde la lista
