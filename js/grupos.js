@@ -1,4 +1,4 @@
-//TODO Recorrer los grupos que ya están y ponerlos en la lista
+//Recorrer los grupos que ya están y los pone en la lista
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   var dbo = db.db("mapa");
@@ -6,7 +6,7 @@ dbo.collection("grupos").find({}).toArray(function(err, result) {
   if (err) throw err;
   for(i = 0; i < result.length; i++){
     grupos.push(result[i]);
-    $( "#contLista" ).append( "<li>"+result[i].nombre+"</li>" );
+    $( "#contLista" ).append( "<p>"+result[i].nombre+"<input type='button' onclick='miFuncion()' class='deleteGrupo' value='Eliminar'/><p><input type='hidden' value="+result[i].rId+">" );
   }
   db.close();
 });
@@ -35,7 +35,7 @@ $("#crearBtn").click(function(){
             db.close();
             grupos.push(myobj);
             console.log(grupos);
-            $( "#contLista" ).append( "<li>"+nombre+"</li>" );
+            $( "#contLista" ).append( "<p>"+nombre+"<input type='button' onclick='miFuncion()' class='deleteGrupo' value='Eliminar'/></p><input class='hi' type='hidden' value="+rId+">" );
           });
         });
     }else if(result.value == "" || result.value == null){
@@ -46,4 +46,31 @@ $("#crearBtn").click(function(){
   });
   });
 
-  //TODO Poder borrar grupos desde la lista
+//TODO Editar desc con el boton de editar
+$(".btnDesc").on('click', function(event){
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  console.log("funciona btnDesc");
+});
+
+//TODO agregar voluntario desde el boton en electron
+$("#agregarVoluntario").click(function(){
+  console.log("agregar voluntario");
+  Swal.fire({
+    title: "Agregar voluntario",
+    text: "Introduce el nombre del voluntario:",
+    input: 'text',
+    showCancelButton: true        
+  }).then((result) => {
+    if (result.value) {
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/";
+    }
+  });
+});
+
+//TODO Poder borrar grupos desde la lista
+function miFuncion(){
+  var rId = $(".hi").val();
+  console.log(rId);
+}

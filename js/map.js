@@ -100,7 +100,7 @@ map.on('draw:created', function (e) {
               })
               console.log(e);
               if(desc !== ""){
-                e.layer.bindPopup("<b>"+desc+"</b>");
+                e.layer.bindPopup("<b>"+desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>");
               }
             }
             if (layer instanceof L.Marker) {
@@ -212,7 +212,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.marker(result[i].coordinates).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         m.options.lat = result[i].coordinates[0];
         m.options.lng = result[i].coordinates[1];
@@ -230,7 +230,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.circle(result[i].coordinates, {radius: result[i].radius}).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;      
         drawnItems.addLayer(m);
       }
@@ -246,7 +246,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.polygon(result[i].latlngs).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         drawnItems.addLayer(m);
       }
@@ -262,7 +262,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.polyline(result[i].latlngs).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         drawnItems.addLayer(m); 
       }
