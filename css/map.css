@@ -22,6 +22,11 @@ input{
     margin-left: 30%;
 }
 
+h2{
+    text-align: center;
+}
+
 #contLista{
     margin-left: 10%;
+    margin-top: 10%;
 }
