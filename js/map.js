@@ -67,11 +67,12 @@ map.on('draw:created', function (e) {
     var type = e.layerType,
         layer = e.layer;
         var inputOptionsPromise = new Promise(function (resolve) {
-          // get your data and pass it to resolve()
+          // TODO iterar los grupos
           setTimeout(function () {
               resolve({
-                'Opcion1' : 'Opcion1',
-                'Opcion2' : 'Opcion2',
+                'Grupo 1' : 'Grupo 1',
+                'Grupo 2' : 'Grupo 2',
+                'Grupo 3' : 'Grupo 3'
               })
           }, 2000)
         })
@@ -100,7 +101,7 @@ map.on('draw:created', function (e) {
               })
               console.log(e);
               if(desc !== ""){
-                e.layer.bindPopup("<b>"+desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>");
+                e.layer.bindPopup("<b>"+desc+"</b><p><b>Voluntarios: 4</b><p>Grupo: "+grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>");
               }
             }
             if (layer instanceof L.Marker) {
@@ -212,7 +213,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.marker(result[i].coordinates).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios: 3</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         m.options.lat = result[i].coordinates[0];
         m.options.lng = result[i].coordinates[1];
@@ -230,7 +231,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.circle(result[i].coordinates, {radius: result[i].radius}).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios: 2</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;      
         drawnItems.addLayer(m);
       }
@@ -246,7 +247,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.polygon(result[i].latlngs).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios: 0</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         drawnItems.addLayer(m);
       }
@@ -262,7 +263,7 @@ MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       for(i = 0; i < result.length; i++){
         var m = L.polyline(result[i].latlngs).addTo(map);
-        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios:</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
+        m.bindPopup("<b>"+result[i].desc+"</b><p><b>Voluntarios: 0</b><p>Grupo: "+result[i].grupo+"</p></p><input class='btnDesc' type='button' value='Editar'/>").openPopup();
         m.options.rId = result[i].rId;
         drawnItems.addLayer(m); 
       }
@@ -322,14 +323,15 @@ map.on('draw:edited', function (e) {
         if (err) throw err;
         var dbo = db.db("mapa");
         var rId = layer.options.rId;
-        var lat = layer.options.lat;
-        var lng = layer.options.lng;
-        var desc = layer.options.desc;
-        var grupo = layer.options.grupo;
-        console.log("Latitud: " + lat);
-        console.log("Longitud: " + lng);
+        var coordinates = layer.getLatLng();
+        //var lat = layer.getLatLng.lat();
+        //var lng = layer.getLatLng.lng();
+        //var desc = layer.options.desc;
+        //var grupo = layer.options.grupo;
+        console.log("Coordenadas: " + coordinates);
+        //console.log("Longitud: " + lng);
         var myquery = { rId: rId };
-        var newvalues = { $set: {rId: rId, coordinates: [lat, lng], desc: desc, grupo: grupo} };
+        var newvalues = { $set: {coordinates: coordinates} };
         dbo.collection("marcadores").updateOne(myquery, newvalues, function(err, res) {
           if (err) throw err;
           console.log("1 marcador editado");
