@@ -72,7 +72,7 @@ map.on('draw:created', function (e) {
               resolve({
                 'Grupo 1' : 'Grupo 1',
                 'Grupo 2' : 'Grupo 2',
-                'Grupo 3' : 'Grupo 3'
+                'Grupo 3' : 'Grupo 3',
               })
           }, 2000)
         })

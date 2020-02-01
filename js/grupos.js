@@ -17,7 +17,8 @@ $("#crearBtn").click(function(){
     title: "Crear Grupo",
     text: "Introduce el nombre del grupo:",
     input: 'text',
-    showCancelButton: true        
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',        
   }).then((result) => {
     if (result.value) {
         var MongoClient = require('mongodb').MongoClient;
@@ -46,11 +47,33 @@ $("#crearBtn").click(function(){
   });
   });
 
-//TODO Editar desc con el boton de editar
+//TODO editar desc con el boton del popup
 $(".btnDesc").on('click', function(event){
-  event.stopPropagation();
-  event.stopImmediatePropagation();
-  console.log("funciona btnDesc");
+  Swal.fire({
+    title: "Editar descripción",
+    text: "Introduce una nueva descripción:",
+    input: 'text',
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',      
+  }).then((result) => {
+    if (result.value) {
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb://localhost:27017/";
+        var desc = result.value;
+        var rId = Math.floor(Math.random() * 1000000000);
+  
+        MongoClient.connect(url, function(err, db) {
+          if (err) throw err;
+          var dbo = db.db("mapa");
+          var myobj = { rId: rId, desc: desc };
+          //db update
+        });
+    }else if(result.value == "" || result.value == null){
+      console.log("Cancelado por vacio");
+    }else{
+      console.log("Cancelado cancelar");
+    }
+  });
 });
 
 //TODO agregar voluntario desde el boton en electron
@@ -69,3 +92,24 @@ $("#agregarVoluntario").click(function(){
   });
 });
 
+//TODO Poder borrar grupos desde la lista
+$("input.deleteGrupo").click(function(){
+  Swal.fire({
+  title: '¿Estás seguro de eliminar el grupo?',
+  text: "No podrás revertir el cambio",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Sí, eliminarlo',
+  cancelButtonText: 'Cancelar'
+}).then((result) => {
+  if (result.value) {
+    Swal.fire(
+      '¡Eliminado!',
+      'El grupo ha sido eliminado',
+      'success'
+    )
+  }
+})
+});
