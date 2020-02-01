@@ -78,8 +78,9 @@ map.on('draw:created', function (e) {
         })
         Swal.mixin({
             input: 'text',
-            confirmButtonText: 'Next &rarr;',
+            confirmButtonText: 'Siguiente &rarr;',
             showCancelButton: true,
+            cancelButtonText: 'Cancelar',
             progressSteps: ['1', '2']
           }).queue([
             {

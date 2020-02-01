@@ -31,9 +31,33 @@
         <h2>Lista de grupos:</h2>
         <div id="contLista">
         </div>
-        <!--<input type="button" id="agregarVoluntario" value="Añadir voluntario"/>-->
+        <input type="button" class="deleteGrupo"/>
+        <input type="button" value="a" class="deleteGrupo"/>
       </div>
     </div>
   </body>
   <script src="js/grupos.js"></script>
+  <script>
+//TODO Poder borrar grupos desde la lista
+$("input.deleteGrupo").click(function(){
+  Swal.fire({
+  title: '¿Estás seguro de eliminar el grupo?',
+  text: "No podrás revertir el cambio",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Sí, eliminarlo',
+  cancelButtonText: 'Cancelar'
+}).then((result) => {
+  if (result.value) {
+    Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    )
+  }
+})
+});
+  </script>
 </html>

@@ -6,7 +6,7 @@ dbo.collection("grupos").find({}).toArray(function(err, result) {
   if (err) throw err;
   for(i = 0; i < result.length; i++){
     grupos.push(result[i]);
-    $( "#contLista" ).append( "<p>"+result[i].nombre+"<input type='button' onclick='miFuncion()' class='deleteGrupo' value='Eliminar'/><p><input type='hidden' value="+result[i].rId+">" );
+    $( "#contLista" ).append( "<p>"+result[i].nombre+"<input type='button' class='deleteGrupo' value='Eliminar'/><p><input type='hidden' value="+result[i].rId+">" );
   }
   db.close();
 });
@@ -35,7 +35,7 @@ $("#crearBtn").click(function(){
             db.close();
             grupos.push(myobj);
             console.log(grupos);
-            $( "#contLista" ).append( "<p>"+nombre+"<input type='button' onclick='miFuncion()' class='deleteGrupo' value='Eliminar'/></p><input class='hi' type='hidden' value="+rId+">" );
+            $( "#contLista" ).append( "<p>"+nombre+"<input type='button' class='deleteGrupo' value='Eliminar'/></p><input class='hi' type='hidden' value="+rId+">" );
           });
         });
     }else if(result.value == "" || result.value == null){
@@ -69,8 +69,3 @@ $("#agregarVoluntario").click(function(){
   });
 });
 
-//TODO Poder borrar grupos desde la lista
-function miFuncion(){
-  var rId = $(".hi").val();
-  console.log(rId);
-}
