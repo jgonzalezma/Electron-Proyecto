@@ -324,17 +324,52 @@ map.on('draw:edited', function (e) {
         var dbo = db.db("mapa");
         var rId = layer.options.rId;
         var coordinates = layer.getLatLng();
-        //var lat = layer.getLatLng.lat();
-        //var lng = layer.getLatLng.lng();
-        //var desc = layer.options.desc;
-        //var grupo = layer.options.grupo;
         console.log("Coordenadas: " + coordinates);
-        //console.log("Longitud: " + lng);
         var myquery = { rId: rId };
         var newvalues = { $set: {coordinates: coordinates} };
         dbo.collection("marcadores").updateOne(myquery, newvalues, function(err, res) {
           if (err) throw err;
           console.log("1 marcador editado");
+          db.close();
+        });
+      }else if(layer instanceof L.CircleMarker || layer instanceof L.Circle){
+        var dbo = db.db("mapa");
+        var rId = layer.options.rId;
+        var coordinates = layer.getLatLng();
+        var radius = layer.getRadius();
+        console.log("Coordenadas: " + coordinates);
+        console.log("Radius nuevo: " + radius);
+        var myquery = { rId: rId };
+        var newvalues = { $set: {coordinates: coordinates, radius: radius} };
+        dbo.collection("circulos").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 circulo editado");
+          db.close();
+        });
+      }else if(layer instanceof L.Polygon){
+        if (err) throw err;
+        var dbo = db.db("mapa");
+        var rId = layer.options.rId;
+        var latlngs = layer.getLatLngs();
+        console.log("Coordenadas: " + latlngs);
+        var myquery = { rId: rId };
+        var newvalues = { $set: {latlngs: latlngs} };
+        dbo.collection("poligonos").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 poligono editado");
+          db.close();
+        });
+      }else if (layer instanceof L.Polyline){
+        if (err) throw err;
+        var dbo = db.db("mapa");
+        var rId = layer.options.rId;
+        var latlngs = layer.getLatLngs();
+        console.log("Coordenadas: " + latlngs);
+        var myquery = { rId: rId };
+        var newvalues = { $set: {latlngs: latlngs} };
+        dbo.collection("polilines").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          console.log("1 poliline editado");
           db.close();
         });
       }
