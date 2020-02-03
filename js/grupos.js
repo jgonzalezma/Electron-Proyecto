@@ -76,24 +76,8 @@ $(".btnDesc").on('click', function(event){
   });
 });
 
-//TODO agregar voluntario desde el boton en electron
-$("#agregarVoluntario").click(function(){
-  console.log("agregar voluntario");
-  Swal.fire({
-    title: "Agregar voluntario",
-    text: "Introduce el nombre del voluntario:",
-    input: 'text',
-    showCancelButton: true        
-  }).then((result) => {
-    if (result.value) {
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb://localhost:27017/";
-    }
-  });
-});
-
 //TODO Poder borrar grupos desde la lista
-$("input.deleteGrupo").click(function(){
+$(".deleteGrupo").click(function(){
   Swal.fire({
   title: '¿Estás seguro de eliminar el grupo?',
   text: "No podrás revertir el cambio",
@@ -105,6 +89,8 @@ $("input.deleteGrupo").click(function(){
   cancelButtonText: 'Cancelar'
 }).then((result) => {
   if (result.value) {
+    //TODO eliminar grupo seleccionado
+
     Swal.fire(
       '¡Eliminado!',
       'El grupo ha sido eliminado',
