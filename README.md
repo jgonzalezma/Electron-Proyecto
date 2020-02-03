@@ -1,7 +1,7 @@
 # Electron-Proyecto
 Tareas por hacer:
 <ul>
-  <li>Editar marcadores de la bd al clickar editar en el toolbar, hay que corregir un bug con esto</li>
+  <li>Editar marcadores de la bd al clickar editar en el toolbar, hay que corregir un bug con esto (probar con addClass para añadir la clase después o sino con appendTo en vez de append)</li>
   <li>Poder borrar estos grupos</li>
   <li>Sacar un listado en el div derecho con los grupos creados</li>
   <li>Meter un array de voluntarios en la colección de grupos, aun que esto debería de hacerse cuando alguien clicka en unirse en la app del móvil</li>
