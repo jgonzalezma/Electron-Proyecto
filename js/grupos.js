@@ -90,7 +90,17 @@ $(".deleteGrupo").click(function(){
 }).then((result) => {
   if (result.value) {
     //TODO eliminar grupo seleccionado
-
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("mapa");
+      var rId = 1;
+      var myquery = { rId: rId };
+      dbo.collection("grupos").deleteOne(myquery, function(err, obj) {
+        if (err) throw err;
+        console.log("Grupo eliminado");
+        db.close();
+      });
+    });
     Swal.fire(
       '¡Eliminado!',
       'El grupo ha sido eliminado',

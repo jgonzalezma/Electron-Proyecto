@@ -55,13 +55,6 @@ MongoClient.connect(url, function(err, db) {
 */
 //TODO Funciones para crear markers, circle, circlemarkers y polygons para simplificar el código
 
-
-//Iterar grupos para añadir el resultado despues
-var grupos_nombre = [];
-for(i = 0; i < grupos.length; i++){
-  grupos_nombre.push(grupos[i]);
-}
-
 //Se ejecuta al crear un marker/circle/etc.
 map.on('draw:created', function (e) {
     var type = e.layerType,
