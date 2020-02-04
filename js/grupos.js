@@ -139,3 +139,9 @@ $(".deleteGrupo").on("click", function(){
     }
   });
 });
+
+$("#btnChat").click(function(){
+  //var str = $("#textChat").val();
+  //console.log(str);
+  socket.emit('mensaje', $('#textChat').val());
+  });
