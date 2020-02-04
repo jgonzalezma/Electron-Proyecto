@@ -33,8 +33,13 @@ h2{
 
 .btnDesc{
     text-align: center;
+    margin-top: 5%;
 }
 
 #agregarVoluntario{
     margin-top: 10%;
+}
+
+#contLista p{
+    text-align: center;
 }
